@@ -34,3 +34,6 @@ const DUMMY_EVENTS = [
 export const getFeaturedEvents = () => {
   return DUMMY_EVENTS.filter((event) => event.isFeatured === true);
 };
+export const getEventById = (id) => {
+  return DUMMY_EVENTS.find((event) => event.id === id);
+};
