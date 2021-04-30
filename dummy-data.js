@@ -37,3 +37,6 @@ export const getFeaturedEvents = () => {
 export const getEventById = (id) => {
   return DUMMY_EVENTS.find((event) => event.id === id);
 };
+export const getAllEvents = () => {
+  return DUMMY_EVENTS;
+};
