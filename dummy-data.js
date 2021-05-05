@@ -40,3 +40,12 @@ export const getEventById = (id) => {
 export const getAllEvents = () => {
   return DUMMY_EVENTS;
 };
+export const getFilteredEvents = (year, month) => {
+  let filteredEvents = DUMMY_EVENTS.filter((event) => {
+    const eventDate = new Date(event.date);
+    return (
+      eventDate.getFullYear() === year && eventDate.getMonth() === month - 1
+    );
+  });
+  return filteredEvents;
+};
