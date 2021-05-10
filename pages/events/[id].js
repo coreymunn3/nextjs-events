@@ -1,22 +1,18 @@
 import React, { Fragment } from 'react';
-import { useRouter } from 'next/router';
-import { getEventById } from '../../dummy-data';
+import { getEventById, getFeaturedEvents } from '../../api';
 // components
 import EventLogistics from '../../components/events/event-logistics';
 import EventSummary from '../../components/events/event-summary';
 import EventContent from '../../components/events/event-content';
 import Button from '../../components/ui/Button';
 
-const EventDetailPage = () => {
-  const router = useRouter();
-  const event = getEventById(router.query.id);
-  console.log(router.query);
+const EventDetailPage = (props) => {
+  const { event } = props;
 
   if (!event) {
     return (
       <div className='center'>
-        <p>No event found</p>
-        <Button destination='/events'>Back to Events</Button>
+        <p>Loading</p>
       </div>
     );
   }
@@ -37,3 +33,34 @@ const EventDetailPage = () => {
 };
 
 export default EventDetailPage;
+
+export async function getStaticProps(context) {
+  const { params } = context;
+  const eventId = params.id;
+
+  const event = await getEventById(eventId);
+
+  if (!event) {
+    return {
+      notFound: true,
+    };
+  }
+  return {
+    props: {
+      event: event,
+    },
+    revalidate: 30,
+  };
+}
+
+export async function getStaticPaths() {
+  const eventsToPrerender = await getFeaturedEvents();
+  const eventPaths = eventsToPrerender.map((event) => ({
+    params: { id: event.id },
+  }));
+  console.log(eventPaths);
+  return {
+    paths: eventPaths,
+    fallback: true,
+  };
+}
