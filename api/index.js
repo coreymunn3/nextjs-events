@@ -19,3 +19,14 @@ export async function getEventById(id) {
   const events = await getAllEvents();
   return events.find((event) => event.id === id);
 }
+
+export const getFilteredEvents = async (year, month) => {
+  const events = await getAllEvents();
+  let filteredEvents = events.filter((event) => {
+    const eventDate = new Date(event.date);
+    return (
+      eventDate.getFullYear() === year && eventDate.getMonth() === month - 1
+    );
+  });
+  return filteredEvents;
+};

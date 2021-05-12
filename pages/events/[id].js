@@ -9,6 +9,7 @@ import Button from '../../components/ui/Button';
 const EventDetailPage = (props) => {
   const { event } = props;
 
+  // events not featured will show a short loading screen
   if (!event) {
     return (
       <div className='center'>
@@ -53,6 +54,8 @@ export async function getStaticProps(context) {
   };
 }
 
+// we don't need to prerender all events, just featured events
+// need to allow fallback since not all pages are pregenerated
 export async function getStaticPaths() {
   const eventsToPrerender = await getFeaturedEvents();
   const eventPaths = eventsToPrerender.map((event) => ({
