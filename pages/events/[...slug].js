@@ -28,14 +28,29 @@ const FilteredEventsPage = () => {
 
   // loading state
   if (!loadedEvents) {
-    return <p className='center'>Loading...</p>;
+    return (
+      <Fragment>
+        <p className='center'>Loading...</p>
+      </Fragment>
+    );
   }
 
   // get filters
-  const filterYear = filter[0];
-  const filterMonth = filter[1];
+  let filterYear = filter?.[0];
+  let filterMonth = filter?.[1];
   const numYear = +filterYear;
   const numMonth = +filterMonth;
+
+  // PAGE HEADER
+  const PAGEHEAD = (
+    <Head>
+      <title>Filtered Events</title>
+      <meta
+        name='description'
+        content={`All events for ${numMonth}/${numYear}`}
+      />
+    </Head>
+  );
 
   // validate filter
   if (
@@ -49,6 +64,7 @@ const FilteredEventsPage = () => {
   ) {
     return (
       <div className='center'>
+        {PAGEHEAD}
         <p>Invalid Filter, please adjust values</p>
         <Button destination='/events'>Show All Events</Button>
       </div>
@@ -66,6 +82,7 @@ const FilteredEventsPage = () => {
   if (!filteredEvents || filteredEvents.length === 0) {
     return (
       <div className='center'>
+        {PAGEHEAD}
         <p>No Events Found for this Filter</p>
         <Button destination='/events'>Show All Events</Button>
       </div>
@@ -73,13 +90,7 @@ const FilteredEventsPage = () => {
   }
   return (
     <Fragment>
-      <Head>
-        <title>Filtered Events</title>
-        <meta
-          name='description'
-          content={`All events for ${numMonth}/${numYear}`}
-        />
-      </Head>
+      {PAGEHEAD}
       <ResultsTitle date={new Date(numYear, numMonth - 1)} />
       <EventList events={filteredEvents} />
     </Fragment>
