@@ -1,9 +1,18 @@
 import React from 'react';
+import Head from 'next/head';
 import { getFeaturedEvents } from '../api';
 import EventList from '../components/events/EventList';
 
 const HopePage = (props) => {
-  return <EventList events={props.featuredEvents} />;
+  return (
+    <div>
+      <Head>
+        <title>NextJS Featured Events</title>
+        <meta name='description' content='find great networking events' />
+      </Head>
+      <EventList events={props.featuredEvents} />
+    </div>
+  );
 };
 
 export default HopePage;
