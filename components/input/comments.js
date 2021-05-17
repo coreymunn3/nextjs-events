@@ -15,6 +15,7 @@ function Comments(props) {
     if (showComments) {
       axios.get(`/api/comments/${eventId}`).then(({ data }) => {
         setComments(data.comments);
+        console.log(data);
       });
     }
   }, [showComments]);

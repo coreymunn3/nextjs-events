@@ -67,7 +67,7 @@ export async function getStaticPaths() {
   const eventPaths = eventsToPrerender.map((event) => ({
     params: { id: event.id },
   }));
-  console.log(eventPaths);
+  // console.log(eventPaths);
   return {
     paths: eventPaths,
     fallback: true,
