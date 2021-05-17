@@ -11,7 +11,7 @@ const FilteredEventsPage = () => {
   // const { hasError, filteredEvents, year, month } = props;
   const router = useRouter();
   const filter = router.query.slug;
-  console.log(filter);
+  // console.log(filter);
 
   // state & logic for getting client side data for filtered events
   const [loadedEvents, setLoadedEvents] = useState();

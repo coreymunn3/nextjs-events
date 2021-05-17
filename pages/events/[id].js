@@ -5,7 +5,7 @@ import Head from 'next/head';
 import EventLogistics from '../../components/events/event-logistics';
 import EventSummary from '../../components/events/event-summary';
 import EventContent from '../../components/events/event-content';
-import Button from '../../components/ui/Button';
+import Comments from '../../components/input/comments';
 
 const EventDetailPage = (props) => {
   const { event } = props;
@@ -34,6 +34,7 @@ const EventDetailPage = (props) => {
       <EventContent>
         <p>{event.description}</p>
       </EventContent>
+      <Comments eventId={event.id} />
     </Fragment>
   );
 };
