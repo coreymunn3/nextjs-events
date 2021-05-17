@@ -1,12 +1,17 @@
-import { MongoClient } from 'mongodb';
+import { connectDB, insertDoc, getDocuments } from '../../../api/db-util';
 
 async function handler(req, res) {
-  console.log(req.method);
-  console.log(req.query);
-  // connect to mongo
-  const client = await MongoClient.connect(
-    'mongodb+srv://coreymunn:Sherm@n5@cluster0.kdjja.mongodb.net/events?retryWrites=true&w=majority'
-  );
+  // console.log(req.method);
+  // console.log(req.query);
+
+  let client, newDoc;
+  // try to connect to mongo
+  try {
+    client = await connectDB();
+  } catch (error) {
+    res.status(500).json({ error: 'Mongo Connection Failed' });
+    return;
+  }
 
   if (req.method === 'POST') {
     const { email, name, text } = req.body;
@@ -18,6 +23,7 @@ async function handler(req, res) {
       !text.trim() === ''
     ) {
       res.status(422).json({ message: 'Invalid Input' });
+      client.close();
       return;
     }
 
@@ -28,23 +34,29 @@ async function handler(req, res) {
       eventId: req.query.eventId,
     };
 
-    const db = client.db();
-    const newDoc = await db.collection('comments').insertOne(newComment);
-    client.close();
-
-    res.status(201).json({ comment: newDoc.ops });
+    try {
+      newDoc = await insertDoc(client, 'comments', newComment);
+      client.close();
+      res.status(201).json({ comment: newDoc.ops });
+    } catch (error) {
+      res.status(500).json({ error: 'Inserting Data Failed' });
+      return;
+    }
   }
   if (req.method === 'GET') {
-    const db = client.db();
-    const documents = await db
-      .collection('comments')
-      .find({ eventId: req.query.eventId })
-      .sort({ _id: -1 })
-      .toArray();
-
-    res.status(200).json({
-      comments: documents,
-    });
+    let documents;
+    try {
+      documents = await getDocuments(client, 'comments', {
+        eventId: req.query.eventId,
+      });
+      res.status(200).json({
+        comments: documents,
+      });
+      client.close();
+    } catch (error) {
+      res.status(500).json({ error: 'Could Not Get Documents' });
+      return;
+    }
   }
 }
 
