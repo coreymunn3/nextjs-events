@@ -1,15 +1,37 @@
 import styles from './newsletter-registration.module.css';
-import { useRef } from 'react';
+import { useRef, useContext } from 'react';
 import axios from 'axios';
+import NotificationContext from '../../store/notificationContext';
 
 function NewsletterRegistration() {
   const emailRef = useRef();
+  const notificationCtx = useContext(NotificationContext);
 
   function registrationHandler(event) {
     event.preventDefault();
+    notificationCtx.showNotification({
+      title: 'Signin Up...',
+      message: 'Registering for Newsletter',
+      status: 'pending',
+    });
+
     axios
       .post('/api/newsletter', { email: emailRef.current.value })
-      .then(({ data }) => console.log(data));
+      .then(({ data }) => {
+        notificationCtx.showNotification({
+          title: 'Success',
+          message: 'Registered for Newsletter',
+          status: 'success',
+        });
+        console.log(data);
+      })
+      .catch((error) => {
+        notificationCtx.showNotification({
+          title: 'Error',
+          message: error.message || 'Unable to Signup for Newsletter',
+          status: 'error',
+        });
+      });
   }
 
   return (
