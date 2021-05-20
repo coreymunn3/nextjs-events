@@ -1,7 +1,11 @@
 import styles from './comment-list.module.css';
 
 function CommentList(props) {
-  const { items } = props;
+  const { items, loading } = props;
+
+  if (loading) {
+    return <p>Loading Comments...</p>;
+  }
   return (
     <ul className={styles.comments}>
       {items.map((item) => (
